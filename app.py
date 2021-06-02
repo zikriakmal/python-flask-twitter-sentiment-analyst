@@ -85,7 +85,7 @@ api = tweepy.API(auth, wait_on_rate_limit=True)
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template("testemplate.html")
+    return render_template("sentiment.html")
 
 
 @app.route('/getcomment', methods=['GET'])
@@ -162,23 +162,51 @@ def cleanHtml():
 
 @app.route('/sentimentanalyst',methods=['GET'])
 def sentimentAnalyst():
-     tableTweet = TweetSentiment.query.all()
-     for data in tableTweet:
+    def clean_tweet(tweet):
+        return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split())
+    tableTweet = TweetCleanTranslate.query.all()
+    dataJson = []
+
+    db.session.query(TweetSentiment).delete()
+    for data in tableTweet:
         analysis = TextBlob(clean_tweet(data.english))
         if analysis.sentiment.polarity > 0:
-            new_task = TweetSentiment(date=data.date,username=data.username,tweet = data.tweet,clean_html=data.clean_html,clean_mention=data.clean_mention,english=data.english,sentimet_analyst="positif",polarity=data.polarity )
+            new_task = TweetSentiment(date=data.date,username=data.username,tweet = data.tweet,clean_html=data.clean_html,clean_mention=data.clean_mention,english=data.english,sentiment_analyst="positif",polarity=analysis.sentiment.polarity  )
+            dataJson.append([data.date,data.username,data.tweet,data.clean_html,data.clean_mention,data.english,"positif",'{0:.3g}'.format(analysis.sentiment.polarity)])
         elif analysis.sentiment.polarity == 0:
-            new_task = TweetSentiment(date=data.date,username=data.username,tweet = data.tweet,clean_html=data.clean_html,clean_mention=data.clean_mention,english=data.english,sentimet_analyst="positif",polarity=data.polarity )
+            new_task = TweetSentiment(date=data.date,username=data.username,tweet = data.tweet,clean_html=data.clean_html,clean_mention=data.clean_mention,english=data.english,sentiment_analyst="netral",polarity=analysis.sentiment.polarity )
+            dataJson.append([data.date,data.username,data.tweet,data.clean_html,data.clean_mention,data.english,"netral",analysis.sentiment.polarity] )
         else:
-            new_task = TweetSentiment(date=data.date,username=data.username,tweet = data.tweet,clean_html=data.clean_html,clean_mention=data.clean_mention,english=data.english,sentimet_analyst="positif",polarity=data.polarity )
+            new_task = TweetSentiment(date=data.date,username=data.username,tweet = data.tweet,clean_html=data.clean_html,clean_mention=data.clean_mention,english=data.english,sentiment_analyst="negatif", polarity=analysis.sentiment.polarity)
+            dataJson.append([data.date,data.username,data.tweet,data.clean_html,data.clean_mention,data.english,"negatif",'{0:.3g}'.format(analysis.sentiment.polarity)])
         db.session.add(new_task)
         db.session.commit()
-        db.session.close()
-       
+    tableSentiment = TweetSentiment.query.all()   
+
+    return jsonify({"data":dataJson})
+
+@app.route('/chart',methods=['GET'])
+def chart():
+    tableSentiment = TweetSentiment.query.all()
+    positif = 0
+    negatif = 0
+    netral = 0
+    for data in tableSentiment:
+        if data.sentiment_analyst=="positif":
+            positif +=1
+        elif data.sentiment_analyst=="netral":
+            netral +=1
+        else :
+            negatif +=1
+
+    data= [positif,netral,negatif]
+    return jsonify(data) 
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404       
        
 if __name__ == "__main__":
     app.run(debug=True)
 
-
-def clean_tweet(tweet):
-    return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split())
