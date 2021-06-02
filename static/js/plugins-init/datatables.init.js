@@ -54,15 +54,8 @@
 
 
 
-	console.log("hai {{url_for('index')}}")
-
     //example 1
-    var table = $('#example').DataTable({
-		ajax:"{{url_for('index')}}/getcomment?comment=sinyal",
-        createdRow: function ( row, data, index ) {
-           $(row).addClass('selected')
-        } 
-    });
+   
       
     table.on('click', 'tbody tr', function() {
     var $row = table.row(this).nodes().to$();

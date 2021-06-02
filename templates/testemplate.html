@@ -2,28 +2,26 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Sentiment Analyst Dashboard</title>
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{url_for( 'static',filename='/images/favicon.png')}}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{url_for( 'static',filename='/images/favicon.png')}}" />
     <!-- Form step -->
     <link href="{{url_for( 'static',filename='vendor/jquery-smartwizard/dist/css/smart_wizard.min.css')}}"
-        rel="stylesheet">
+        rel="stylesheet" />
 
     <!-- data table -->
-    <link href="{{url_for('static',filename='vendor/datatables/css/jquery.dataTables.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static',filename='vendor/datatables/css/jquery.dataTables.min.css')}}" rel="stylesheet" />
 
     <!-- Custom Stylesheet -->
     <link href="{{url_for( 'static',filename='vendor/bootstrap-select/dist/css/bootstrap-select.min.css')}}"
-        rel="stylesheet">
-    <link href="{{url_for( 'static',filename='css/style.css')}}" rel="stylesheet">
-
+        rel="stylesheet" />
+    <link href="{{url_for( 'static',filename='css/style.css')}}" rel="stylesheet" />
 </head>
 
 <body>
-
     <!--*******************
         Preloader start
     ********************-->
@@ -38,12 +36,10 @@
         Preloader end
     ********************-->
 
-
     <!--**********************************
         Main wrapper start
     ***********************************-->
     <div id="main-wrapper">
-
         <!--**********************************
             Nav header start
         ***********************************-->
@@ -74,13 +70,10 @@
             Nav header end
         ***********************************-->
 
-
         <!--**********************************
             Header start
         ***********************************-->
-        <div class="header">
-
-        </div>
+        <div class="header"></div>
         <!--**********************************
             Header end ti-comment-alt
         ***********************************-->
@@ -91,25 +84,29 @@
         <div class="deznav">
             <div class="deznav-scroll">
                 <div class="main-profile">
-                    <img src="{{url_for('static',filename='images/Untitled-1.jpg')}}" alt="">
+                    <img src="{{url_for('static',filename='images/Untitled-1.jpg')}}" alt="" />
                     <a href="javascript:void(0);"><i class="fa fa-cog" aria-hidden="true"></i></a>
-                    <h5 class="mb-0 fs-20 text-black "><span class="font-w400">Hello,</span> Marquez</h5>
+                    <h5 class="mb-0 fs-20 text-black">
+                        <span class="font-w400">Hello,</span> Marquez
+                    </h5>
                     <p class="mb-0 fs-14 font-w400">marquezzzz@mail.com</p>
                 </div>
                 <ul class="metismenu" id="menu">
-                    <li><a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
+                    <li>
+                        <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                             <i class="flaticon-144-layout"></i>
                             <span class="nav-text">Dashboard</span>
                         </a>
                         <ul aria-expanded="false">
                             <li><a href="{{url_for('index')}}testemplate">Dashboard</a></li>
                         </ul>
-
                     </li>
                 </ul>
                 <div class="copyright">
                     <p><strong>Koi Brothers</strong> © 2021 All Rights Reserved</p>
-                    <p class="fs-12">Made with <span class="heart"></span> by Koi Brothers</p>
+                    <p class="fs-12">
+                        Made with <span class="heart"></span> by Koi Brothers
+                    </p>
                 </div>
             </div>
         </div>
@@ -129,25 +126,28 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">Create Project</h5>
-                                <button type="button" class="close" data-dismiss="modal"><span>&times;</span>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span>&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
                                 <form>
                                     <div class="form-group">
                                         <label class="text-black font-w500">Project Name</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" />
                                     </div>
                                     <div class="form-group">
                                         <label class="text-black font-w500">Deadline</label>
-                                        <input type="date" class="form-control">
+                                        <input type="date" class="form-control" />
                                     </div>
                                     <div class="form-group">
                                         <label class="text-black font-w500">Client Name</label>
-                                        <input type="text" class="form-control">
+                                        <input type="text" class="form-control" />
                                     </div>
                                     <div class="form-group">
-                                        <button type="button" class="btn btn-primary">CREATE</button>
+                                        <button type="button" class="btn btn-primary">
+                                            CREATE
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -163,7 +163,9 @@
                     </div>
                     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Dashboard</a></li>
+                            <li class="breadcrumb-item active">
+                                <a href="javascript:void(0)">Dashboard</a>
+                            </li>
                         </ol>
                     </div>
                 </div>
@@ -175,25 +177,34 @@
                                 <h4 class="card-title">Sentiment Analysist Step</h4>
                             </div>
                             <div class="card-body">
-                                <div id="#step1">
+                                <div id="step1">
                                     <h2 class="">Step 1</h2>
                                     <h3 class="mt-3">Pilih Komentar</h3>
                                     <div class="row">
                                         <div class="col-md-9">
                                             <select class="mt-2 form-control default-select" id="sel1">
-                                                <option value="" selected> Pilih Komentar</option>
-                                                <option value="Jaringan Telkomsel">Jaringan Telkomsel</option>
-                                                <option value="Kenyamanan Telkomsel">Kenyamanan Telkomsel</option>
-                                                <option value="Layanan Telkomsel">Layanan Telkomsel</option>
-                                                <option value="Internet Telkomsel">Internet Telkomsel</option>
+                                                <option value="" selected>Pilih Komentar</option>
+                                                <option value="Jaringan Telkomsel">
+                                                    Jaringan Telkomsel
+                                                </option>
+                                                <option value="Kenyamanan Telkomsel">
+                                                    Kenyamanan Telkomsel
+                                                </option>
+                                                <option value="Layanan Telkomsel">
+                                                    Layanan Telkomsel
+                                                </option>
+                                                <option value="Internet Telkomsel">
+                                                    Internet Telkomsel
+                                                </option>
                                             </select>
                                         </div>
                                         <div class="col-md-3 col-12 text-center">
-                                            <button id="crawl" class="btn btn-primary my-2 text-right">Crawl
-                                                Komentar</button>
+                                            <button id="crawl" class="btn btn-primary my-2 btn-block">
+                                                Crawl Komentar
+                                            </button>
                                         </div>
                                     </div>
-                                    <div style="display: none;" id="data-crawl">
+                                    <div style="display: none" class="w-100" id="data-crawl">
                                         <h3 class="mt-3">Data Komentar Tercrawl</h3>
                                         <div class="table-responsive mt-3">
                                             <table id="example" class="display" style="min-width: 845px">
@@ -204,14 +215,38 @@
                                                         <th>Tweet</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-                                                </tbody>
+                                                <tbody></tbody>
                                             </table>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="#step2">
+                                <div id="step2" style="display: none;">
                                     <h2 class="my-2">Step 2</h2>
+                                    <div class="row">
+                                        <div class="col-md-4 col-12">
+                                            <button id="cleanbutton" class="btn btn-primary my-2 text-center btn-block">
+                                                Clean HTML Text and Clean Mention
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div style="display: none" id="data-html-mention">
+                                        <h3 class="mt-3">Data Clean</h3>
+                                        <div class="table-responsive mt-3">
+                                            <table id="cleanhtmlmention" class="display" style="min-width: 845px">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Waktu</th>
+                                                        <th>Username</th>
+                                                        <th>Tweet</th>
+                                                        <th>clean Html</th>
+                                                        <th>clean Mention</th>
+                                                        <th>English</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -223,22 +258,20 @@
             Content body end
         ***********************************-->
 
-
         <!--**********************************
             Footer start
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="http://dexignzone.com/"
-                        target="_blank">DexignZone</a> 2021</p>
+                <p>
+                    Copyright © Designed &amp; Developed by
+                    <a href="http://koi-brother.com/" target="_blank">Koi Brothers</a> 2021
+                </p>
             </div>
         </div>
         <!--**********************************
             Footer end
         ***********************************-->
-
-
-
     </div>
 
     <!--**********************************
@@ -253,34 +286,73 @@
     <script src="{{url_for('static',filename='vendor/datatables/js/jquery.dataTables.min.js')}}"></script>
     <!-- <script src="{{url_for('static',filename='js/plugins-init/datatables.init.js')}}"></script> -->
     <script>
-        const sel = $('#sel1')
-        $('#crawl').on('click', function () {
+        const sel = $("#sel1");
+        $("#crawl").on("click", function () {
+
+
             if (sel.val() !== "")
             {
-                $(this).html(`<i class="fa fa-spinner fa-spin "></i>`)
+                $(this).html(`<i class="fa fa-spinner fa-spin "></i>`);
                 $("#example").dataTable().fnDestroy();
-                var table = $('#example').DataTable({
-                    aLengthMenu: [[5, 10, 15, 25, 50, 100, -1], [5, 10, 15, 25, 50, 100, "All"]],
+                var table = $("#example").DataTable({
+                    autoWidth: false,
+                    aLengthMenu: [
+                        [5, 10, 15, 25, 50, 100, -1],
+                        [5, 10, 15, 25, 50, 100, "All"],
+                    ],
                     iDisplayLength: 5,
                     ajax: {
                         url: "{{url_for('getComment')}}?comment=" + sel.val(),
                         type: "GET",
                     },
                     createdRow: function (row, data, index) {
-                        $(row).addClass('selected')
+                        $(row).addClass("selected");
                     },
                     fnInitComplete: function () {
-                        $('#crawl').html('Crawl Commentar')
-                        $('#data-crawl').show();
-                    }
-
+                        $("#crawl").html("Crawl Commentar");
+                        $("#data-crawl").show();
+                        $("#step2").show();
+                    },
                 });
-            }
-            else
+            } else
             {
-                alert('pilih dulu lah lek iya kali enggak !!')
+                alert("pilih dulu lah lek iya kali enggak !!");
             }
         });
+
+        $("#cleanbutton").on("click", function () {
+
+            if (sel.val() !== "")
+            {
+                $(this).html(`<i class="fa fa-spinner fa-spin "></i>`);
+                $("#cleanhtmlmention").dataTable().fnDestroy();
+                var table = $("#cleanhtmlmention").DataTable({
+                    autoWidth: false,
+                    aLengthMenu: [
+                        [5, 10, 15, 25, 50, 100, -1],
+                        [5, 10, 15, 25, 50, 100, "All"],
+                    ],
+                    iDisplayLength: 5,
+                    ajax: {
+                        url: "{{url_for('cleanHtml')}}",
+                        type: "GET",
+                    },
+                    createdRow: function (row, data, index) {
+                        $(row).addClass("selected");
+                    },
+                    fnInitComplete: function () {
+                        $("#cleanbutton").html("Clean HTML Text and Clean Mention");
+                        $("#data-html-mention").show();
+                    },
+                });
+            } else
+            {
+                alert("pilih dulu lah lek iya kali enggak !!");
+            }
+        });
+
+
+
     </script>
 </body>
 
