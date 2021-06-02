@@ -91,7 +91,7 @@ def index():
 @app.route('/getcomment', methods=['GET'])
 def getComment():
     comment = request.args.get('comment')
-    tweets = tweepy.Cursor(api.search, q=comment, count=100).items(5)
+    tweets = tweepy.Cursor(api.search, q=comment, count=100).items(20)
     data_list = []
 
     db.session.query(Tweet).delete()
