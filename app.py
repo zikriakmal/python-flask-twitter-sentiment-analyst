@@ -62,17 +62,6 @@ class TweetSentiment(db.Model):
     def __repr__(self):
         return '<TweetSentiment %r>' % self.id
 
-
-
-# class Tweet(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     content = db.Column(db.String(200), nullable=False)
-#     completed = db.Column(db.String, default=0)
-#     date_created = db.Column(db.DateTime, default=datetime.utcnow)
-#     def __repr__(self):
-#         return '<Task %r>' % self.id
-
-
 # twitter api key env
 api_key = "AbyvtiguFlUdXaV89ezG7cVV5"
 api_secretkey = "5oZ7HHT1rdtDO1vYNUkb2ujgi5Qp8tmHEOdceDBxxoqlu9paJp"
@@ -91,18 +80,19 @@ def index():
 @app.route('/getcomment', methods=['GET'])
 def getComment():
     comment = request.args.get('comment')
-    tweets = tweepy.Cursor(api.search, q=comment, count=100).items(20)
+    tweets = tweepy.Cursor(api.search, q=comment, count=100).items(1000)
     data_list = []
 
     db.session.query(Tweet).delete()
     for tweet in tweets:
-        new_task = Tweet(date=tweet.created_at,
-                         username=tweet.user.screen_name, tweet=tweet.text)
-        db.session.add(new_task)
-        db.session.commit()
-        db.session.close()
-        data_list.append(
-            [tweet.created_at, tweet.user.screen_name, tweet.text])
+        if(tweet.user.screen_name != "Telkomsel"):
+            new_task = Tweet(date=tweet.created_at,
+                           username=tweet.user.screen_name, tweet=tweet.text)
+            db.session.add(new_task)
+            db.session.commit()
+            db.session.close()
+            data_list.append(
+             [tweet.created_at, tweet.user.screen_name, tweet.text])
     return jsonify({"data": data_list})
 
 
@@ -146,6 +136,7 @@ def cleanHtml():
     telkomsel_data["cleanMention"] = cleanMention
     translator = google_translator()  
     telkomsel_data['English'] = telkomsel_data['cleanMention'].apply(translator.translate, lang_src='id', lang_tgt='en')
+    time.sleep(2)
 
     newdatalist = []
     db.session.query(TweetCleanTranslate).delete()
