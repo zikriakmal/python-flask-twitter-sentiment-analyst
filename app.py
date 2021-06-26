@@ -76,6 +76,10 @@ api = tweepy.API(auth, wait_on_rate_limit=True)
 def index():
     return render_template("sentiment.html")
 
+@app.route('/tentang')
+def home():
+    return render_template('statis.html')
+
 
 @app.route('/getcomment', methods=['GET'])
 def getComment():
