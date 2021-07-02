@@ -76,15 +76,15 @@ api = tweepy.API(auth, wait_on_rate_limit=True)
 def index():
     return render_template("sentiment.html")
 
-@app.route('/tentang')
+@app.route('/statis')
 def home():
-    return render_template('statis.html')
+    return render_template('static.html')
 
 
 @app.route('/getcomment', methods=['GET'])
 def getComment():
     comment = request.args.get('comment')
-    tweets = tweepy.Cursor(api.search, q=comment, count=100).items(100)
+    tweets = tweepy.Cursor(api.search, q=comment, count=10).items(10)
     data_list = []
 
     db.session.query(Tweet).delete()
@@ -137,10 +137,12 @@ def cleanHtml():
         cleanMention.insert(i, clean)
         i += 1
 
+
     telkomsel_data["cleanMention"] = cleanMention
     translator = google_translator()  
-    telkomsel_data['English'] = telkomsel_data['cleanMention'].apply(translator.translate, lang_src='id', lang_tgt='en')
+    telkomsel_data["English"] = telkomsel_data["cleanMention"].apply(translator.translate, lang_src="id", lang_tgt="en")
     time.sleep(2)
+    return jsonify(telkomsel_data["English"]);
 
     newdatalist = []
     db.session.query(TweetCleanTranslate).delete()
