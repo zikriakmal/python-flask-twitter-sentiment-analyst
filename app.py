@@ -141,8 +141,6 @@ def cleanHtml():
     telkomsel_data["cleanMention"] = cleanMention
     translator = google_translator()  
     telkomsel_data["English"] = telkomsel_data["cleanMention"].apply(translator.translate, lang_src="id", lang_tgt="en")
-    time.sleep(2)
-    return jsonify(telkomsel_data["English"]);
 
     newdatalist = []
     db.session.query(TweetCleanTranslate).delete()
