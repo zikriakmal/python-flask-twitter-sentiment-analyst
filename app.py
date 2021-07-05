@@ -134,6 +134,11 @@ def cleanHtml():
     for column in telkomsel_data.cleanHTML:
         # menghilangkan tanda @ mention
         clean = re.sub(r'@[A-Za-z0-9_]+', '', telkomsel_data.cleanHTML[i])
+        clean = re.sub('https?://[A-Za-z0-9./]+','', telkomsel_data.cleanHTML[i])
+        clean = re.sub(r"\\x(.){2}", "", telkomsel_data.cleanHTML[i])
+        clean = re.sub(r"^b[\'\"]|#[A-Za-z0-9]+|RT|\\n|  +|:\(|:\)|:v|:V|:'\)|:'\(", " ", telkomsel_data.cleanHTML[i]) # menghilangkan karakter lain
+        clean = re.sub("\W+| +", " ", clean)
+
         cleanMention.insert(i, clean)
         i += 1
 
@@ -167,13 +172,13 @@ def sentimentAnalyst():
         analysis = TextBlob(clean_tweet(data.english))
         if analysis.sentiment.polarity > 0:
             new_task = TweetSentiment(date=data.date,username=data.username,tweet = data.tweet,clean_html=data.clean_html,clean_mention=data.clean_mention,english=data.english,sentiment_analyst="positif",polarity=analysis.sentiment.polarity  )
-            dataJson.append([data.date,data.username,data.tweet,data.clean_html,data.clean_mention,data.english,"positif",'{0:.3g}'.format(analysis.sentiment.polarity)])
+            dataJson.append([data.date,data.username,data.tweet,data.clean_html,data.clean_mention,data.english,"positif",'{0:.1g}'.format(analysis.sentiment.polarity)])
         elif analysis.sentiment.polarity == 0:
             new_task = TweetSentiment(date=data.date,username=data.username,tweet = data.tweet,clean_html=data.clean_html,clean_mention=data.clean_mention,english=data.english,sentiment_analyst="netral",polarity=analysis.sentiment.polarity )
             dataJson.append([data.date,data.username,data.tweet,data.clean_html,data.clean_mention,data.english,"netral",analysis.sentiment.polarity] )
         else:
             new_task = TweetSentiment(date=data.date,username=data.username,tweet = data.tweet,clean_html=data.clean_html,clean_mention=data.clean_mention,english=data.english,sentiment_analyst="negatif", polarity=analysis.sentiment.polarity)
-            dataJson.append([data.date,data.username,data.tweet,data.clean_html,data.clean_mention,data.english,"negatif",'{0:.3g}'.format(analysis.sentiment.polarity)])
+            dataJson.append([data.date,data.username,data.tweet,data.clean_html,data.clean_mention,data.english,"negatif",'{0:.1g}'.format(analysis.sentiment.polarity)])
         db.session.add(new_task)
         db.session.commit()
     tableSentiment = TweetSentiment.query.all()   
