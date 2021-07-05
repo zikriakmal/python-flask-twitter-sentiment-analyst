@@ -76,22 +76,23 @@ api = tweepy.API(auth, wait_on_rate_limit=True)
 def index():
     return render_template("sentiment.html")
 
-@app.route('/tentang')
-def home():
-    return render_template('statis.html')
+@app.route('/statis')
+def statis():
+    return render_template("static.html")
 
 
 @app.route('/getcomment', methods=['GET'])
 def getComment():
     comment = request.args.get('comment')
-    tweets = tweepy.Cursor(api.search, q=comment, count=100).items(100)
+    tweets = tweepy.Cursor(api.search, q=comment, count=10).items(10)
     data_list = []
 
     db.session.query(Tweet).delete()
     for tweet in tweets:
         if(tweet.user.screen_name != "Telkomsel"):
             new_task = Tweet(date=tweet.created_at,
-                           username=tweet.user.screen_name, tweet=tweet.text)
+                           username=tweet.user.screen_name, 
+                           tweet=tweet.text)
             db.session.add(new_task)
             db.session.commit()
             db.session.close()
@@ -142,10 +143,10 @@ def cleanHtml():
         cleanMention.insert(i, clean)
         i += 1
 
+
     telkomsel_data["cleanMention"] = cleanMention
     translator = google_translator()  
-    telkomsel_data['English'] = telkomsel_data['cleanMention'].apply(translator.translate, lang_src='id', lang_tgt='en')
-    time.sleep(2)
+    telkomsel_data["English"] = telkomsel_data["cleanMention"].apply(translator.translate, lang_src="id", lang_tgt="en")
 
     newdatalist = []
     db.session.query(TweetCleanTranslate).delete()
@@ -182,6 +183,70 @@ def sentimentAnalyst():
         db.session.add(new_task)
         db.session.commit()
     tableSentiment = TweetSentiment.query.all()   
+
+    return jsonify({"data":dataJson})
+
+
+@app.route('/clean-html-static',methods=['GET'])
+def cleanHtmlStatic():
+    
+    month = request.args.get('month')
+    year = request.args.get('year')
+
+    date = month+"-"+year
+    commentType = request.args.get('comment')
+    commentnya  = "";  
+    if commentType == "Jaringan Telkomsel":
+        commentnya ="./databulanan/jaringan-telkomsel/jaringan-telkomsel-Bulan-"+date+" - jaringan-telkomsel-Bulan-"+date+".csv";
+    elif commentType == "Kenyamanan Telkomsel":
+        commentnya ="./databulanan/kenyamanan-telkomsel/kenyamanan-telkomsel-Bulan-"+date+" - kenyamanan-telkomsel-Bulan-"+date+".csv";
+    elif commentType == "Layanan Telkomsel":
+        commentnya ="./databulanan/layanan-telkomsel/layanan-telkomsel-Bulan-"+date+" - layanan-telkomsel-Bulan-"+date+".csv";
+    elif commentType == "Internet Telkomsel": 
+        commentnya ="./databulanan/internet-telkomsel/internet-telkomsel-Bulan-"+date+" - internet-telkomsel-Bulan-"+date+".csv";
+    elif commentType ==  "Harga Telkomsel":
+        commentnya ="./databulanan/harga-telkomsel/harga-telkomsel-Bulan-"+date+" - harga-telkomsel-Bulan-"+date+".csv";
+
+    data = pd.read_csv(commentnya)
+
+    dataJson = []
+    for i in range(0,len(data['english'])):
+       dataJson.append([data['created_at'][i],data['username'][i],data['tweet'][i],data['english'][i]]) 
+    return jsonify({"data":dataJson})
+
+@app.route('/sentiment-analyst-static',methods=['GET'])
+def sentimentAnalystStatic():
+    def clean_tweet(tweet):
+        return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split())
+    
+    month = request.args.get('month')
+    year = request.args.get('year')
+
+    date = month+"-"+year
+    commentType = request.args.get('comment')
+
+    commentnya  = "";  
+    if commentType == "Jaringan Telkomsel":
+        commentnya ="./databulanan/jaringan-telkomsel/jaringan-telkomsel-Bulan-"+date+" - jaringan-telkomsel-Bulan-"+date+".csv";
+    elif commentType == "Kenyamanan Telkomsel":
+        commentnya ="./databulanan/kenyamanan-telkomsel/kenyamanan-telkomsel-Bulan-"+date+" - kenyamanan-telkomsel-Bulan-"+date+".csv";
+    elif commentType == "Layanan Telkomsel":
+        commentnya ="./databulanan/layanan-telkomsel/layanan-telkomsel-Bulan-"+date+" - layanan-telkomsel-Bulan-"+date+".csv";
+    elif commentType == "Internet Telkomsel": 
+        commentnya ="./databulanan/internet-telkomsel/internet-telkomsel-Bulan-"+date+" - internet-telkomsel-Bulan-"+date+".csv";
+    elif commentType ==  "Harga Telkomsel":
+        commentnya ="./databulanan/harga-telkomsel/harga-telkomsel-Bulan-"+date+" - harga-telkomsel-Bulan-"+date+".csv";
+
+    data = pd.read_csv(commentnya)
+    dataJson=[]
+    for i in range(0,len(data['english'])):
+        analysis = TextBlob(clean_tweet(data['english'][i]))
+        if analysis.sentiment.polarity > 0:
+            dataJson.append([data['created_at'][i],data['username'][i],data['tweet'][i],data['english'][i],"positif",'{0:.3g}'.format(analysis.sentiment.polarity)]) 
+        elif analysis.sentiment.polarity == 0:
+            dataJson.append([data['created_at'][i],data['username'][i],data['tweet'][i],data['english'][i],"netral",'{0:.3g}'.format(analysis.sentiment.polarity)]) 
+        elif analysis.sentiment.polarity < 0:
+            dataJson.append([data['created_at'][i],data['username'][i],data['tweet'][i],data['english'][i],"negatif",'{0:.3g}'.format(analysis.sentiment.polarity)]) 
 
     return jsonify({"data":dataJson})
 
