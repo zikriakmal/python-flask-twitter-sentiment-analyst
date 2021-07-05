@@ -338,11 +338,14 @@
                                 }
                             });
                             const total = result[0] + result[1] + result[2];
-                            $("#infochart").html(`<h3 style='font-size=16px;'><i class="fa fa-circle mr-1" style="color: #20c997;"></i>${result[0] / total * 100} % Positif 
+                            let res1 = result[0] / total * 100
+                            let res2 = result[1] / total * 100
+                            let res3 = result[2] / total * 100
+                            $("#infochart").html(`<h3 style='font-size=16px;'><i class="fa fa-circle mr-1" style="color: #20c997;"></i>${res1.toFixed(2)} % Positif 
                                                                 </h3>
-                                                            <h3 style='font-size=16px;'><i class="fa fa-circle  mr-1" style="color:#E8E8E8;"></i>${result[1] / total * 100} % Netral 
+                                                            <h3 style='font-size=16px;'><i class="fa fa-circle  mr-1" style="color:#E8E8E8;"></i>${res2.toFixed(2) } % Netral 
                                                                 </h3>
-                                                            <h3 style='font-size=16px;'><i class="fa fa-circle  mr-1" style="color: #EB8153"></i>${result[2] / total * 100} % Negatif
+                                                            <h3 style='font-size=16px;'><i class="fa fa-circle  mr-1" style="color: #EB8153"></i>${res3.toFixed(2)} % Negatif
                                                             </h3>`)
 
                         }
