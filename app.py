@@ -1,3 +1,4 @@
+import io
 from flask import Flask, render_template, url_for, request, Response, redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -18,6 +19,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import re
 import os
+import base64
+
+
+from os import path
+from PIL import Image
+from wordcloud import WordCloud, STOPWORDS, ImageColorGenerator
+import matplotlib.pyplot as plt
 
 
 file_path = os.path.abspath(os.getcwd())+"database.db"
@@ -243,7 +251,70 @@ def sentimentAnalystStatic():
         elif analysis.sentiment.polarity < 0:
             dataJson.append([data['created_at'][i],data['username'][i],data['tweet'][i],data['english'][i],"negatif",'{0:.3g}'.format(analysis.sentiment.polarity)]) 
 
+
     return jsonify({"data":dataJson})
+
+@app.route('/wordcloud-chart',methods=['GET'])
+def wordcloudChart():
+    def clean_tweet(tweet):
+        return ' '.join(re.sub("(@[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)", " ", tweet).split())
+    
+    month = request.args.get('month')
+    year = request.args.get('year')
+
+    date = month+"-"+year
+    commentType = request.args.get('comment')
+
+    commentnya  = "";  
+    if commentType == "Jaringan Telkomsel":
+        commentnya ="./databulanan/jaringan-telkomsel/jaringan-telkomsel-Bulan-"+date+" - jaringan-telkomsel-Bulan-"+date+".csv";
+    elif commentType == "Kenyamanan Telkomsel":
+        commentnya ="./databulanan/kenyamanan-telkomsel/kenyamanan-telkomsel-Bulan-"+date+" - kenyamanan-telkomsel-Bulan-"+date+".csv";
+    elif commentType == "Layanan Telkomsel":
+        commentnya ="./databulanan/layanan-telkomsel/layanan-telkomsel-Bulan-"+date+" - layanan-telkomsel-Bulan-"+date+".csv";
+    elif commentType == "Internet Telkomsel": 
+        commentnya ="./databulanan/internet-telkomsel/internet-telkomsel-Bulan-"+date+" - internet-telkomsel-Bulan-"+date+".csv";
+    elif commentType ==  "Harga Telkomsel":
+        commentnya ="./databulanan/harga-telkomsel/harga-telkomsel-Bulan-"+date+" - harga-telkomsel-Bulan-"+date+".csv";
+
+    data = pd.read_csv(commentnya)
+    dataJson=[]
+
+    positif = 0
+    negatif = 0
+    netral = 0
+    for i in range(0,len(data['english'])):
+        analysis = TextBlob(clean_tweet(data['english'][i]))
+        if analysis.sentiment.polarity > 0:
+            positif +=1
+            dataJson.append([data['created_at'][i],data['username'][i],data['tweet'][i],data['english'][i],"positif",'{0:.3g}'.format(analysis.sentiment.polarity)]) 
+        elif analysis.sentiment.polarity == 0:
+            netral +=1
+            dataJson.append([data['created_at'][i],data['username'][i],data['tweet'][i],data['english'][i],"netral",'{0:.3g}'.format(analysis.sentiment.polarity)]) 
+        elif analysis.sentiment.polarity < 0:
+            negatif +=1
+            dataJson.append([data['created_at'][i],data['username'][i],data['tweet'][i],data['english'][i],"negatif",'{0:.3g}'.format(analysis.sentiment.polarity)]) 
+
+
+
+    text = " ".join(review for review in data.tweet.astype(str))
+
+    stopwords = set(STOPWORDS)
+    stopwords.update(["https", "rose", "petals", "Average", "diameter","flushes", 'co', "Blooms", "form","t"])
+
+    # Generate a word cloud image
+
+    wordcloud = WordCloud(stopwords=stopwords, background_color="white", width=800, height=400).generate(text).to_image()
+
+    # Display the generated image:
+    # the matplotlib way:
+
+    img = io.BytesIO()
+    wordcloud.save(img, "PNG")
+    img.seek(0)
+    img_base64 = base64.b64encode(img.getvalue()).decode()
+    return jsonify({"chart":[positif,netral,negatif],"wordcloud":img_base64}) 
+
 
 @app.route('/chart',methods=['GET'])
 def chart():
