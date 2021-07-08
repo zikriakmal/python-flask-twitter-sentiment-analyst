@@ -64,8 +64,16 @@
           </div>
           <div class="row">
             <div class="col">
-            <button id="sentimentData" class="btn btn-primary">Analisis Sentimen</button>
-                <div style="display: none" class="w-100" id="data-sent">
+            
+
+
+
+              <button id="sentimentData" class="btn btn-primary">
+                Analisis Sentimen
+              </button>
+
+
+              <div style="display: none" class="w-100" id="data-sent">
                 <h3 class="mt-3">Data Komentar Tercrawl</h3>
                 <div class="table-responsive mt-3">
                   <table id="sentimentDataTable" class="display" style="min-width: 845px">
@@ -77,14 +85,21 @@
                         <th>English</th>
                         <th>Sentiment</th>
                         <th>Polarity</th>
-                                    
                       </tr>
                     </thead>
                     <tbody></tbody>
                   </table>
                 </div>
               </div>
-       
+              <div class="chart-point text-center my-2" style="height: 400px !important; width: 100% !important;">
+                <div class="check-point-area" style="height: 400px !important; width:60% !important;">
+                  <canvas id="pie_chart" style="height: 400px !important; width: 60% !important;"></canvas>
+                </div>
+                <div class="d-flex flex-column justify-content-center" id="infochart"
+                  style="height: 400px !important; width:40% !important;">
+                </div>
+              </div>
+              <div id="wordcloud" class="my-4"></div>
             </div>
           </div>
         </div>
@@ -93,13 +108,28 @@
   </div>
 </div>
 
-{% endblock %} {% block js %}
+{% endblock %}
+{% block js %}
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
   const sel = $("#sel1");
   const sel2 = $("#sel2");
   const sel3 = $("#sel3");
   $("#showData").on("click", function () {
-    if ((sel.val() !== null) && (sel2.val() !== null) && (sel3.val() !== null)) {
+    if (sel.val() !== null && sel2.val() !== null && sel3.val() !== null)
+    {
+ $.ajax({
+      url:
+            "{{url_for('sentimentAnalystStatic')}}?comment=" +
+            sel.val() +
+            "&month=" +
+            sel2.val() +
+            "&year=" +
+            sel3.val(),
+          type: "GET",
+      success: function(result){
+
+
       $(this).html(`<i class="fa fa-spinner fa-spin "></i>`);
       $("#example").dataTable().fnDestroy();
       var table = $("#example").DataTable({
@@ -116,7 +146,13 @@
         ],
         iDisplayLength: 5,
         ajax: {
-          url: "{{url_for('cleanHtmlStatic')}}?comment="+sel.val()+"&month="+sel2.val()+"&year=" + sel3.val(),
+          url:
+            "{{url_for('cleanHtmlStatic')}}?comment=" +
+            sel.val() +
+            "&month=" +
+            sel2.val() +
+            "&year=" +
+            sel3.val(),
           type: "GET",
         },
         createdRow: function (row, data, index) {
@@ -126,15 +162,32 @@
           $("#showData").html("Show Data");
           $("#data-crawl").show();
         },
-      });
-    } else {
-      alert("pilih dulu lah lek iya kali enggak !!");
-    }
+      });},
+      error: function(error){
+        swal("Mohon maaf!", "Data belum ada di database!", "info");
+      }
+    });
+    } else
+    {
+     swal("Mohon maaf!", "Silahkan pilih data terlebih dahulu!", "info");
+       }
   });
-$("#sentimentData").on("click", function () {
-  console.log(sel2.val())
-    if ((sel.val() !== null) && (sel2.val() !== null) && (sel3.val() !== null)) {
-      $(this).html(`<i class="fa fa-spinner fa-spin "></i>`);
+  $("#sentimentData").on("click", function () {
+    
+  
+    if (sel.val() !== null && sel2.val() !== null && sel3.val() !== null)
+    {
+  $.ajax({
+      url:
+            "{{url_for('sentimentAnalystStatic')}}?comment=" +
+            sel.val() +
+            "&month=" +
+            sel2.val() +
+            "&year=" +
+            sel3.val(),
+          type: "GET",
+      success: function(result){
+   $(this).html(`<i class="fa fa-spinner fa-spin "></i>`);
       $("#sentimentDataTable").dataTable().fnDestroy();
       var table = $("#sentimentDataTable").DataTable({
         buttons: [
@@ -150,7 +203,13 @@ $("#sentimentData").on("click", function () {
         ],
         iDisplayLength: 5,
         ajax: {
-          url: "{{url_for('sentimentAnalystStatic')}}?comment="+sel.val()+"&month="+sel2.val()+"&year=" + sel3.val(),
+          url:
+            "{{url_for('sentimentAnalystStatic')}}?comment=" +
+            sel.val() +
+            "&month=" +
+            sel2.val() +
+            "&year=" +
+            sel3.val(),
           type: "GET",
         },
         createdRow: function (row, data, index) {
@@ -161,9 +220,136 @@ $("#sentimentData").on("click", function () {
           $("#data-sent").show();
         },
       });
-    } else {
-      alert("pilih dulu lah lek iya kali enggak !!");
-    }
+      $.ajax({
+        url:
+          "{{url_for('wordcloudChart')}}?comment=" +
+          sel.val() +
+          "&month=" +
+          sel2.val() +
+          "&year=" +
+          sel3.val(),
+        success: function (result) {
+          console.log(result);
+          $("#wordcloud").html(
+            `<img class="img-fluid" src="data:image/png;base64,${result.wordcloud}" alt="WordCloud" />`
+          );
+
+          const pie_chart = document.getElementById("pie_chart").getContext('2d');
+          // pie_chart.height = 100;
+          new Chart(pie_chart, {
+
+            type: 'pie',
+            data: {
+              defaultFontFamily: 'Poppins',
+              datasets: [{
+                data: result.chart,
+                borderWidth: 0,
+                backgroundColor: [
+                  "#20c997",
+                  "#E8E8E8",
+                  "#EB8153 ",
+                ],
+                hoverBackgroundColor: [
+                  "#20c997",
+                  "#E8E8E8",
+                  "#EB8153 ",
+                ]
+
+              }],
+              labels: [
+                "Positif",
+                "Netral",
+                "Negatif",
+              ]
+            },
+            options: {
+              responsive: true,
+              legend: false,
+              maintainAspectRatio: false,
+            }
+          });
+          const total = result.chart[0] + result.chart[1] + result.chart[2];
+          let res1 = result.chart[0] / total * 100
+          let res2 = result.chart[1] / total * 100
+          let res3 = result.chart[2] / total * 100
+          $("#infochart").html(`<h3 style='font-size=16px;'><i class="fa fa-circle mr-1" style="color: #20c997;"></i>${res1.toFixed(2)} % Positif 
+                                                                </h3>
+                                                            <h3 style='font-size=16px;'><i class="fa fa-circle  mr-1" style="color:#E8E8E8;"></i>${res2.toFixed(2)} % Netral 
+                                                                </h3>
+                                                            <h3 style='font-size=16px;'><i class="fa fa-circle  mr-1" style="color: #EB8153"></i>${res3.toFixed(2)} % Negatif
+                                                            </h3>`)
+
+        },
+      });
+   
+      },
+      error: function(error){
+        swal("Mohon maaf!", "Data belum ada di database!", "info");
+      }
+    });
+
+    } else
+    {
+     swal("Mohon maaf!", "Silahkan pilih data terlebih dahulu!", "info");
+ }
   });
+</script>
+
+<script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-core.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-tag-cloud.min.js"></script>
+<script>
+  // anychart.onDocumentReady(function () {
+  //   // create data
+  //   var data =
+  //     "Tyger, tyger, burning bright " +
+  //     "In the forests of the night, " +
+  //     "What immortal hand or eye " +
+  //     "Could frame thy fearful symmetry? " +
+  //     "In what distant deeps or skies " +
+  //     "Burnt the fire of thine eyes? " +
+  //     "On what wings dare he aspire? " +
+  //     "What the hand dare seize the fire? " +
+  //     "And what shoulder and what art " +
+  //     "Could twist the sinews of thy heart? " +
+  //     "And, when thy heart began to beat, " +
+  //     "What dread hand and what dread feet? " +
+  //     "What the hammer? what the chain? " +
+  //     "In what furnace was thy brain? " +
+  //     "What the anvil? what dread grasp " +
+  //     "Dare its deadly terrors clasp? " +
+  //     "When the stars threw down their spears, " +
+  //     "And watered heaven with their tears, " +
+  //     "Did He smile His work to see? " +
+  //     "Did He who made the lamb make thee? " +
+  //     "Tyger, tyger, burning bright " +
+  //     "In the forests of the night, " +
+  //     "What immortal hand or eye " +
+  //     "Dare frame thy fearful symmetry? ";
+
+  //   // create a chart
+  //   chart = anychart.tagCloud();
+
+  //   // configure angles
+  //   chart.angles([0]);
+
+  //   // set the parsing mode
+  //   chart.data(data, { mode: "by-word" });
+
+  //   // set the chart title
+  //   chart.listen("chartDraw", function () {
+  //     chart.title("Tag Cloud Chart: Mode = " + chart.mode());
+  //   });
+
+  //   // set the container id
+  //   chart.container("wordcloud");
+
+  //   // initiate drawing the chart
+  //   chart.draw();
+  // });
+
+  // // set the mode of the tag cloud
+  // function tagCloudMode(mode) {
+  //   chart.mode("rect");
+  // }
 </script>
 {% endblock%}
