@@ -92,7 +92,7 @@ def statis():
 @app.route('/getcomment', methods=['GET'])
 def getComment():
     comment = request.args.get('comment')
-    tweets = tweepy.Cursor(api.search, q=comment, count=10).items(10)
+    tweets = tweepy.Cursor(api.search, q=comment, count=10).items(100)
     data_list = []
 
     db.session.query(Tweet).delete()
