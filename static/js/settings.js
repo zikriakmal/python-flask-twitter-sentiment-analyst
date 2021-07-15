@@ -6,7 +6,7 @@ var html = $('html');
 
 function dezSettings({typography, version, layout, navheaderBg, headerBg, sidebarStyle, sidebarBg, sidebarPosition, headerPosition, containerLayout, direction, primary}) {
     this.typography = typography || "roboto";
-    this.version = version || "light";
+    this.version = version || "dark";
     this.layout = layout || "vertical";
     this.navheaderBg = navheaderBg || "color_1";
     this.headerBg = headerBg || "color_1";

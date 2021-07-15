@@ -48,7 +48,7 @@
       <!--**********************************
             Nav header start
         ***********************************-->
-      <div class="nav-header" style="background-color: rgb(177, 1, 1);">
+      <div class="nav-header shadow" style="background-color: #f18d9e;">
         <a href="{{url_for('index')}}" class="brand-logo text-center">
           <svg class="logo-abbr mx-2" width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect class="svg-logo-rect" width="50" height="50" rx="20" fill="#EB8153" />
@@ -78,7 +78,7 @@
       <!--**********************************
             Header start
         ***********************************-->
-      <div class="header" style="background-color: rgb(177, 1, 1);"></div>
+      <div class="header shadow" style="background-color: #f18d9e"></div>
       <!--**********************************
             Header end ti-comment-alt
         ***********************************-->
@@ -86,29 +86,29 @@
       <!--**********************************
             Sidebar start
         ***********************************-->
-      <div class="deznav" style="background-color: whitesmoke;">
+      <div class="deznav" style="background-color: #98dbc6;">
         <div class="deznav-scroll">
           <div class="main-profile">
             <img src="{{url_for('static',filename='images/woman.png')}}" alt="" />
             <h5 class="mb-0 fs-20 text-black"><span class="font-w400">Hello,</span> Selvi</h5>
-            <p class="mb-0 fs-14 font-w400">selvi@telkomsel.com</p>
+            <p class="mb-0 fs-14 font-w400 text-black">selvi@telkomsel.com</p>
           </div>
           <ul class="metismenu" id="menu">
             <li>
               <a class="has-arrow ai-icon" href="javascript:void()" aria-expanded="false">
                 <i class="flaticon-144-layout"></i>
-                <span class="nav-text">Menu</span>
+                <span class="nav-text text-black">Menu</span>
               </a>
               <ul aria-expanded="false">
-                <li><a href="{{url_for('index')}}">Realtime</a></li>
-                <li><a href="/statis">Statis</a></li>
+                <li><a href="{{url_for('index')}}" class="text-black">Realtime</a></li>
+                <li><a href="/statis" class="text-black">Statis</a></li>
                 <!-- <li><a href="/tentang">Tentang</a></li> -->
               </ul>
             </li>
           </ul>
           <div class="copyright">
-            <p><strong>Selvi Analysist</strong> © 2021 All Rights Reserved</p>
-            <p class="fs-12">Made with <span class="heart"></span>Selvi Analysist</p>
+            <p class="text-black"><strong>Selvi Analysist</strong> © 2021 All Rights Reserved</p>
+            <p class="fs-12 text-black" >Made with <span class="heart"></span>Selvi Analysist</p>
           </div>
         </div>
       </div>
@@ -130,11 +130,11 @@
       <!--**********************************
             Footer start
         ***********************************-->
-      <div class="footer">
-        <div class="copyright">
-          <p>
+      <div class="footer" style="background-color: whitesmoke;">
+        <div class="copyright shadow-lg" style="background-color: #f18d9e">
+          <p class="text-white">
             Copyright © Designed &amp; Developed by
-            <a href="http://koi-brother.com/" target="_blank">Selvi Analysist</a> 2021
+            <a href="http://koi-brother.com/" target="_blank" class="text-black">Selvi Analysist</a> 2021
           </p>
         </div>
       </div>
